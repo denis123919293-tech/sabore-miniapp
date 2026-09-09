@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Saborê • Family Dinner Builder</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root {
+  --bg:#f6f1e8; --card:#fffdf8; --ink:#15372f; --muted:#77847f;
+  --brand:#0f5c4c; --brand2:#17473e; --accent:#e7b36d; --line:#e8dfd2;
+  --danger:#a94e44; --shadow:0 16px 45px rgba(25,54,46,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:
+  radial-gradient(circle at 8% 0%,rgba(231,179,109,.19),transparent 24%),
+  linear-gradient(180deg,#fbf8f2 0%,var(--bg) 100%);
+  color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:760px;margin:auto;padding:0 14px 120px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:44px;height:44px;border-radius:50%;background:var(--brand);color:white;display:grid;place-items:center;font:24px Georgia,serif;box-shadow:0 10px 28px rgba(15,92,76,.24)}
+.brand b{font:24px Georgia,serif} .brand small{display:block;color:var(--muted);margin-top:3px}
+.pill{border:1px solid var(--line);background:white;border-radius:999px;padding:9px 12px;color:var(--brand);font-weight:800}
+.hero{background:linear-gradient(135deg,#183f36,#0f5c4c);color:white;border-radius:28px;padding:26px;box-shadow:var(--shadow);margin-bottom:20px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.05);right:-70px;bottom:-100px}
+.hero .eyebrow,.eyebrow{font-size:11px;font-weight:900;letter-spacing:.15em;opacity:.72}
+.hero h1{font:38px/.98 Georgia,serif;margin:10px 0 12px;max-width:520px}
+.hero p{color:rgba(255,255,255,.78);line-height:1.5;max-width:560px}
+.section{margin-top:22px}
+.section h2{font:28px Georgia,serif;margin:5px 0 14px}
+.mode-grid{display:grid;gap:12px}
+.mode{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 8px 22px rgba(35,50,45,.05);display:flex;gap:14px;align-items:center}
+.mode-icon{width:54px;height:54px;border-radius:18px;background:#eef4f1;display:grid;place-items:center;font-size:27px;flex:0 0 auto}
+.mode h3{margin:0 0 5px;font:21px Georgia,serif} .mode p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.mode button{margin-left:auto;border:0;border-radius:14px;background:var(--brand);color:white;padding:11px 14px;font-weight:900}
+.panel{background:rgba(255,253,248,.94);border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow);margin-top:18px}
+.hidden{display:none!important}
+.back{border:0;background:none;color:var(--brand);font-weight:900;padding:0 0 10px}
+.counter-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.counter-card{border:1px solid var(--line);border-radius:20px;padding:16px;background:white}
+.counter-card b{font:19px Georgia,serif}
+.counter{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.counter button{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:white;color:var(--brand);font-size:22px;font-weight:900}
+.counter span{font-size:24px;font-weight:900}
+.primary{width:100%;border:0;border-radius:16px;background:var(--brand);color:white;padding:14px 16px;font-weight:900;margin-top:16px}
+.secondary{width:100%;border:1px solid var(--line);border-radius:16px;background:white;color:var(--brand);padding:13px 16px;font-weight:900;margin-top:10px}
+.progress{display:flex;gap:7px;margin:10px 0 16px}
+.progress span{height:6px;flex:1;border-radius:999px;background:#e5e8e4}
+.progress span.active{background:var(--brand)}
+.person-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.person-head h3{font:25px Georgia,serif;margin:0}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.choice{border:2px solid transparent;background:white;border-radius:20px;overflow:hidden;box-shadow:0 7px 18px rgba(32,49,43,.06)}
+.choice.selected{border-color:var(--brand);box-shadow:0 0 0 3px rgba(15,92,76,.08)}
+.choice img{width:100%;height:145px;object-fit:cover;display:block;background:#eee}
+.placeholder{height:145px;display:grid;place-items:center;background:linear-gradient(145deg,#f0eadf,#fff);font-size:52px}
+.choice .info{padding:12px}
+.choice h4{font:18px Georgia,serif;margin:0 0 5px}
+.choice p{margin:0;color:var(--muted);font-size:12px;line-height:1.35}
+.choice .price{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-weight:900}
+.selectbtn{border:0;border-radius:10px;background:#eef4f1;color:var(--brand);padding:8px 10px;font-weight:900}
+.choice.selected .selectbtn{background:var(--brand);color:white}
+.optional{font-size:12px;color:var(--muted);margin:-7px 0 12px}
+.family-size{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.family-size button{border:1px solid var(--line);background:white;border-radius:17px;padding:18px 10px;font-weight:900;color:var(--ink)}
+.family-size button.active{background:var(--brand);color:white;border-color:var(--brand)}
+.summary-person{padding:13px 0;border-bottom:1px dashed var(--line);display:flex;justify-content:space-between;gap:12px}
+.summary-person small{display:block;color:var(--muted);margin-top:4px;line-height:1.4}
+.total{display:flex;justify-content:space-between;font-size:22px;font-weight:900;padding-top:16px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:6px} .field.full{grid-column:1/-1}
+.field span{font-size:12px;color:var(--muted);font-weight:800}
+.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:14px;background:white;padding:13px;outline:none;color:var(--ink)}
+.toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-20px);opacity:0;transition:.25s;background:var(--brand2);color:white;padding:12px 16px;border-radius:14px;z-index:99;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.sticky{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(730px,calc(100% - 24px));background:#102f29;color:white;border-radius:20px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 18px 50px rgba(0,0,0,.25);z-index:40}
+.sticky small{display:block;color:rgba(255,255,255,.65)} .sticky button{border:0;background:white;color:var(--brand);border-radius:13px;padding:10px 14px;font-weight:900}
+@media(max-width:520px){
+  .hero h1{font-size:34px} .counter-row,.form{grid-template-columns:1fr} .field.full{grid-column:auto}
+  .cards{grid-template-columns:1fr 1fr} .mode{align-items:flex-start;flex-wrap:wrap} .mode button{width:100%;margin-left:0}
+}
+@media(max-width:380px){.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand"><div class="logo">S</div><div><b>Saborê</b><small>Floripa • jantar em família</small></div></div>
+    <button class="pill">♡</button>
+  </div>
+
+  <section class="hero">
+    <span class="eyebrow">SABORÊ FAMILY</span>
+    <h1>Ужин, который подходит всей семье</h1>
+    <p>Соберите каждому свой набор или выберите один большой семейный ужин на всех.</p>
+  </section>
+
+  <section id="home" class="section">
+    <span class="eyebrow">КАК ХОТИТЕ ЗАКАЗАТЬ?</span>
+    <h2>Выберите формат</h2>
+    <div class="mode-grid">
+      <div class="mode">
+        <div class="mode-icon">👤</div>
+        <div><h3>Каждому отдельно</h3><p>Укажите взрослых и детей — каждый соберёт свой набор.</p></div>
+        <button onclick="startIndividual()">Собрать</button>
+      </div>
+      <div class="mode">
+        <div class="mode-icon">👨‍👩‍👧‍👦</div>
+        <div><h3>Семейный ужин</h3><p>Одна большая подача на всю семью: основное, гарниры и салат.</p></div>
+        <button onclick="startFamily()">Выбрать</button>
+      </div>
+      <div class="mode">
+        <div class="mode-icon">🔁</div>
+        <div><h3>Повторить прошлый</h3><p>Быстрый повтор любимого семейного заказа.</p></div>
+        <button onclick="repeatLast()">Повторить</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="peoplePanel" class="panel hidden">
+    <button class="back" onclick="goHome()">← Назад</button>
+    <span class="eyebrow">ШАГ 1</span>
+    <h2>Сколько вас сегодня?</h2>
+    <div class="counter-row">
+      <div class="counter-card"><b>Взрослые</b><div class="counter"><button onclick="changeCount('adults',-1)">−</button><span id="adultsCount">2</span><button onclick="changeCount('adults',1)">+</button></div></div>
+      <div class="counter-card"><b>Дети</b><div class="counter"><button onclick="changeCount('kids',-1)">−</button><span id="kidsCount">0</span><button onclick="changeCount('kids',1)">+</button></div></div>
+    </div>
+    <button class="primary" onclick="createPeople()">Продолжить →</button>
+  </section>
+
+  <section id="builderPanel" class="panel hidden">
+    <button class="back" onclick="goHome()">← К форматам заказа</button>
+    <div class="progress"><span class="active"></span><span id="p2"></span><span id="p3"></span><span id="p4"></span></div>
+    <div class="person-head"><h3 id="personTitle">Взрослый 1</h3><button class="pill" id="copyBtn" onclick="copyPrevious()">Скопировать предыдущий</button></div>
+    <p id="stepLabel" class="optional"></p>
+    <div id="choiceArea" class="cards"></div>
+    <button class="primary" id="nextChoiceBtn" onclick="nextBuilderStep()">Продолжить</button>
+  </section>
+
+  <section id="familyPanel" class="panel hidden">
+    <button class="back" onclick="goHome()">← Назад</button>
+    <span class="eyebrow">СЕМЕЙНЫЙ УЖИН</span>
+    <h2>На сколько человек?</h2>
+    <div class="family-size">
+      <button onclick="setFamilySize('2 человека',2,this)">2 человека</button>
+      <button onclick="setFamilySize('3–4 человека',4,this)">3–4 человека</button>
+      <button onclick="setFamilySize('5–6 человек',6,this)">5–6 человек</button>
+      <button onclick="setFamilySize('7+ человек',8,this)">7+ человек</button>
+    </div>
+
+    <div id="familyChoices" class="hidden">
+      <div class="section"><span class="eyebrow">ОСНОВНОЕ</span><h2>Выберите семейное блюдо</h2><div id="familyMain" class="cards"></div></div>
+      <div class="section"><span class="eyebrow">ГАРНИРЫ</span><h2>Выберите до двух</h2><div id="familySides" class="cards"></div></div>
+      <div class="section"><span class="eyebrow">САЛАТ</span><h2>Добавить салат?</h2><p class="optional">Необязательно</p><div id="familySalads" class="cards"></div></div>
+      <button class="primary" onclick="finishFamily()">Посмотреть итог</button>
+    </div>
+  </section>
+
+  <section id="summaryPanel" class="panel hidden">
+    <button class="back" onclick="goHome()">← Изменить формат</button>
+    <span class="eyebrow">ВАШ ЗАКАЗ</span>
+    <h2>Проверьте перед оформлением</h2>
+    <div id="summaryList"></div>
+    <div class="total"><span>Итого</span><span id="summaryTotal">R$ 0,00</span></div>
+
+    <div class="section">
+      <span class="eyebrow">ДОСТАВКА</span><h2>Куда привезти?</h2>
+      <div class="form">
+        <label class="field"><span>Имя</span><input id="name" placeholder="Maria"></label>
+        <label class="field"><span>Телефон</span><input id="phone" placeholder="+55 ..."></label>
+        <label class="field full"><span>Адрес</span><input id="address" placeholder="Rua, número, bairro"></label>
+        <label class="field"><span>Время</span><select id="time"><option>Как можно скорее</option><option>18:00–19:00</option><option>19:00–20:00</option><option>20:00–21:00</option></select></label>
+        <label class="field"><span>Оплата</span><select id="payment"><option>PIX</option><option>Карта</option><option>Наличные</option></select></label>
+        <label class="field full"><span>Комментарий</span><textarea id="comment" rows="3" placeholder="Например: позвонить у ворот"></textarea></label>
+      </div>
+      <button class="primary" onclick="submitOrder()">Подтвердить заказ</button>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="sticky" id="sticky"><div><small>Текущий заказ</small><b id="stickyTotal">R$ 0,00</b></div><button onclick="openSummary()">Итог →</button></div>
+
+<script>
+const tg=window.Telegram?.WebApp;
+if(tg){tg.ready();tg.expand();try{tg.setHeaderColor('#f6f1e8')}catch(e){}}
+
+const menus={
+ main:[
+  {id:'fish',name:'Красная рыба в соусе маракуйя',desc:'Нежное филе, кисло-сладкий соус маракуйя',price:42,img:'fish.jpg?v=2',emoji:'🐟'},
+  {id:'chicken',name:'Курица на гриле',desc:'Сочная курица с травами',price:36,emoji:'🍗'},
+  {id:'pasta',name:'Паста дня',desc:'Домашняя паста с нежным соусом',price:38,emoji:'🍝'}
+ ],
+ side:[
+  {id:'rice',name:'Белый рис',desc:'Рассыпчатый рис',price:12,emoji:'🍚'},
+  {id:'potato',name:'Запечённый картофель',desc:'Картофель с травами',price:14,emoji:'🥔'},
+  {id:'veg',name:'Овощи',desc:'Сезонные овощи',price:15,emoji:'🥦'}
+ ],
+ salad:[
+  {id:'none',name:'Без салата',desc:'Ничего не добавлять',price:0,emoji:'➖'},
+  {id:'broccoli',name:'Салат с брокколи',desc:'Нежный сливочный салат с овощами',price:16,emoji:'🥗'},
+  {id:'fresh',name:'Свежий салат',desc:'Овощи, зелень и лёгкая заправка',price:15,emoji:'🥬'}
+ ]
+};
+
+let adults=2,kids=0,people=[],personIndex=0,step='main',mode=null,familySize=0,familyLabel='',familyMain=null,familySides=[],familySalad=null;
+
+const money=n=>`R$ ${Number(n).toFixed(2).replace('.',',')}`;
+const show=id=>document.getElementById(id).classList.remove('hidden');
+const hide=id=>document.getElementById(id).classList.add('hidden');
+function hideAll(){['home','peoplePanel','builderPanel','familyPanel','summaryPanel'].forEach(hide)}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
+function goHome(){hideAll();show('home');mode=null;updateSticky()}
+function startIndividual(){mode='individual';hideAll();show('peoplePanel')}
+function startFamily(){mode='family';hideAll();show('familyPanel');renderFamily()}
+function repeatLast(){mode='individual';people=[{type:'Взрослый',main:'fish',side:'rice',salad:'broccoli'},{type:'Взрослый',main:'fish',side:'rice',salad:'none'}];renderSummary();toast('Прошлый заказ добавлен')}
+function changeCount(type,d){if(type==='adults')adults=Math.max(1,adults+d);else kids=Math.max(0,kids+d);document.getElementById(type==='adults'?'adultsCount':'kidsCount').textContent=type==='adults'?adults:kids}
+function createPeople(){people=[];for(let i=0;i<adults;i++)people.push({type:'Взрослый',main:null,side:null,salad:null});for(let i=0;i<kids;i++)people.push({type:'Ребёнок',main:null,side:null,salad:null});personIndex=0;step='main';hideAll();show('builderPanel');renderBuilder()}
+function personName(i){const p=people[i];const same=people.slice(0,i+1).filter(x=>x.type===p.type).length;return `${p.type} ${same}`}
+function renderBuilder(){
+ const p=people[personIndex];
+ document.getElementById('personTitle').textContent=personName(personIndex);
+ document.getElementById('copyBtn').style.visibility=personIndex?'visible':'hidden';
+ const labels={main:'Выберите основное блюдо',side:'Теперь выберите гарнир',salad:'Салат — по желанию'};
+ document.getElementById('stepLabel').textContent=labels[step];
+ ['p2','p3','p4'].forEach(x=>document.getElementById(x).classList.remove('active'));
+ if(step==='side')document.getElementById('p2').classList.add('active');
+ if(step==='salad'){document.getElementById('p2').classList.add('active');document.getElementById('p3').classList.add('active')}
+ const items=menus[step], selected=p[step];
+ document.getElementById('choiceArea').innerHTML=items.map(x=>`<div class="choice ${selected===x.id?'selected':''}" onclick="selectPersonChoice('${x.id}')">
+   ${x.img?`<img src="${x.img}" alt="">`:`<div class="placeholder">${x.emoji}</div>`}
+   <div class="info"><h4>${x.name}</h4><p>${x.desc}</p><div class="price"><span>${x.price?money(x.price):'Без доплаты'}</span><button class="selectbtn">${selected===x.id?'Выбрано':'Выбрать'}</button></div></div></div>`).join('');
+ updateSticky();
+}
+function selectPersonChoice(id){people[personIndex][step]=id;renderBuilder()}
+function nextBuilderStep(){
+ const p=people[personIndex]; if(!p[step]){toast('Сначала выберите вариант');return}
+ if(step==='main'){step='side';renderBuilder();return}
+ if(step==='side'){step='salad';renderBuilder();return}
+ if(personIndex<people.length-1){personIndex++;step='main';renderBuilder();return}
+ renderSummary();
+}
+function copyPrevious(){if(personIndex>0)people[personIndex]={...people[personIndex-1],type:people[personIndex].type};toast('Набор скопирован');renderBuilder()}
+function itemBy(cat,id){return menus[cat].find(x=>x.id===id)}
+function personTotal(p){return ['main','side','salad'].reduce((s,k)=>s+(itemBy(k,p[k])?.price||0),0)}
+
+function setFamilySize(label,n,btn){familyLabel=label;familySize=n;document.querySelectorAll('.family-size button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');show('familyChoices');renderFamilyChoices()}
+function renderFamily(){
+ familyMain=null;familySides=[];familySalad=null;familySize=0;familyLabel='';hide('familyChoices');document.querySelectorAll('.family-size button').forEach(b=>b.classList.remove('active'))
+}
+function familyPrice(base){const mult=familySize<=2?1.8:familySize<=4?3:familySize<=6?4.2:5.4;return Math.round(base*mult)}
+function renderFamilyChoices(){
+ document.getElementById('familyMain').innerHTML=menus.main.map(x=>`<div class="choice ${familyMain===x.id?'selected':''}" onclick="selectFamilyMain('${x.id}')">${x.img?`<img src="${x.img}">`:`<div class="placeholder">${x.emoji}</div>`}<div class="info"><h4>${x.name}</h4><p>Большая семейная подача</p><div class="price"><span>${money(familyPrice(x.price))}</span><button class="selectbtn">${familyMain===x.id?'Выбрано':'Выбрать'}</button></div></div></div>`).join('');
+ document.getElementById('familySides').innerHTML=menus.side.map(x=>`<div class="choice ${familySides.includes(x.id)?'selected':''}" onclick="toggleFamilySide('${x.id}')"><div class="placeholder">${x.emoji}</div><div class="info"><h4>${x.name}</h4><p>${x.desc}</p><div class="price"><span>включено</span><button class="selectbtn">${familySides.includes(x.id)?'Выбрано':'Выбрать'}</button></div></div></div>`).join('');
+ document.getElementById('familySalads').innerHTML=menus.salad.map(x=>`<div class="choice ${familySalad===x.id?'selected':''}" onclick="selectFamilySalad('${x.id}')"><div class="placeholder">${x.emoji}</div><div class="info"><h4>${x.name}</h4><p>${x.desc}</p><div class="price"><span>${x.id==='none'?'Без доплаты':money(Math.round(x.price*1.7))}</span><button class="selectbtn">${familySalad===x.id?'Выбрано':'Выбрать'}</button></div></div></div>`).join('');
+ updateSticky();
+}
+function selectFamilyMain(id){familyMain=id;renderFamilyChoices()}
+function toggleFamilySide(id){if(familySides.includes(id))familySides=familySides.filter(x=>x!==id);else if(familySides.length<2)familySides.push(id);else{toast('Можно выбрать максимум 2 гарнира');return}renderFamilyChoices()}
+function selectFamilySalad(id){familySalad=id;renderFamilyChoices()}
+function familyTotal(){if(!familyMain)return 0;let t=familyPrice(itemBy('main',familyMain).price);if(familySalad&&familySalad!=='none')t+=Math.round(itemBy('salad',familySalad).price*1.7);return t}
+function finishFamily(){if(!familySize||!familyMain||!familySides.length||!familySalad){toast('Заполните все шаги');return}renderSummary()}
+
+function renderSummary(){
+ hideAll();show('summaryPanel');const list=document.getElementById('summaryList');let total=0;
+ if(mode==='individual'){
+  list.innerHTML=people.map((p,i)=>{const t=personTotal(p);total+=t;return `<div class="summary-person"><div><b>${personName(i)}</b><small>${itemBy('main',p.main)?.name||'—'} · ${itemBy('side',p.side)?.name||'—'} · ${itemBy('salad',p.salad)?.name||'—'}</small></div><b>${money(t)}</b></div>`}).join('');
+ } else {
+  total=familyTotal();list.innerHTML=`<div class="summary-person"><div><b>Семейный ужин · ${familyLabel}</b><small>${itemBy('main',familyMain)?.name} · ${familySides.map(x=>itemBy('side',x).name).join(' + ')} · ${itemBy('salad',familySalad)?.name}</small></div><b>${money(total)}</b></div>`;
+ }
+ document.getElementById('summaryTotal').textContent=money(total);updateSticky();
+}
+function currentTotal(){if(mode==='individual')return people.reduce((s,p)=>s+personTotal(p),0);if(mode==='family')return familyTotal();return 0}
+function updateSticky(){document.getElementById('stickyTotal').textContent=money(currentTotal())}
+function openSummary(){if(currentTotal()>0)renderSummary();else toast('Сначала соберите заказ')}
+function submitOrder(){
+ const name=document.getElementById('name').value.trim(),address=document.getElementById('address').value.trim();
+ if(!name||!address){toast('Укажите имя и адрес');return}
+ const payload={type:'new_order',mode,total:currentTotal(),people:mode==='individual'?people:null,family:mode==='family'?{familyLabel,familySize,familyMain,familySides,familySalad}:null,delivery:{name,phone:document.getElementById('phone').value,address,time:document.getElementById('time').value,payment:document.getElementById('payment').value,comment:document.getElementById('comment').value}};
+ try{tg?.sendData?.(JSON.stringify(payload));tg?.HapticFeedback?.notificationOccurred('success')}catch(e){}
+ toast('Заказ готов к отправке ✅');
+}
+const u=tg?.initDataUnsafe?.user;if(u?.first_name)document.getElementById('name').value=u.first_name;
+updateSticky();
+</script>
+</body>
+</html>
