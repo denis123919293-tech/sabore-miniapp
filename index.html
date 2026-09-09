@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <title>Saborê • Telegram Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="topline">
+        <div class="brand">
+          <div class="logo">S</div>
+          <div>
+            <div class="brand-name">Saborê</div>
+            <div class="brand-sub">Floripa • comida com carinho</div>
+          </div>
+        </div>
+        <button class="icon-btn" aria-label="Избранное">♡</button>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-copy">
+          <span class="eyebrow">HOJE</span>
+          <h1>Вкусный ужин<br>без лишних хлопот</h1>
+          <p>Домашние блюда, гарниры и детское меню с доставкой по Florianópolis.</p>
+          <button class="primary hero-cta" data-scroll="#menu">Выбрать блюда</button>
+        </div>
+        <div class="hero-visual"><div class="plate">🍽️</div></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section" id="menu">
+        <div class="section-head">
+          <div><span class="eyebrow">МЕНЮ</span><h2>Что будем заказывать?</h2></div>
+          <button class="text-btn" id="repeatBtn">Повторить прошлый</button>
+        </div>
+        <div class="chips" id="categoryChips"></div>
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+
+      <section class="section soft-card">
+        <div class="section-head">
+          <div><span class="eyebrow">ДОСТАВКА</span><h2>Куда привезти?</h2></div>
+        </div>
+        <div class="form-grid">
+          <label class="field"><span>Имя</span><input id="nameInput" placeholder="Например, Maria" /></label>
+          <label class="field"><span>Телефон</span><input id="phoneInput" placeholder="+55 ..." inputmode="tel" /></label>
+          <label class="field full"><span>Адрес</span><input id="addressInput" placeholder="Rua, número, bairro" /></label>
+          <label class="field"><span>Время</span>
+            <select id="timeInput">
+              <option>Как можно скорее</option><option>18:00–19:00</option><option>19:00–20:00</option><option>20:00–21:00</option>
+            </select>
+          </label>
+          <label class="field"><span>Оплата</span>
+            <select id="paymentInput"><option>PIX</option><option>Карта при доставке</option><option>Наличные</option></select>
+          </label>
+          <label class="field full"><span>Комментарий</span><textarea id="commentInput" rows="3" placeholder="Без лука, позвонить у ворот и т.д."></textarea></label>
+        </div>
+      </section>
+
+      <section class="section summary-card">
+        <div><span class="eyebrow">ВАШ ЗАКАЗ</span><h2>Корзина</h2></div>
+        <div id="cartList" class="cart-list"><div class="empty">Пока ничего не выбрано</div></div>
+        <div class="totals">
+          <div><span>Блюда</span><strong id="subtotal">R$ 0,00</strong></div>
+          <div><span>Доставка</span><strong id="delivery">R$ 10,00</strong></div>
+          <div class="grand"><span>Итого</span><strong id="total">R$ 0,00</strong></div>
+        </div>
+        <button class="primary checkout-btn" id="checkoutBtn">Подтвердить заказ</button>
+      </section>
+    </main>
+
+    <div class="bottom-cart">
+      <div><small id="bottomCount">0 товаров</small><strong id="bottomTotal">R$ 0,00</strong></div>
+      <button id="openCartBtn">Корзина →</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
