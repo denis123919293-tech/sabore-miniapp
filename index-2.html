@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <title>Saborê • Telegram Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+
+:root{--bg:#f6f3ec;--card:#fffdf8;--ink:#15352e;--muted:#78837d;--line:#e7e1d7;--brand:#0e5c4b;--shadow:0 18px 50px rgba(33,50,43,.10)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 10% 0%,rgba(228,176,106,.18),transparent 24%),linear-gradient(180deg,#faf8f3 0%,var(--bg) 100%);color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app-shell{max-width:760px;margin:0 auto;padding:0 18px 120px}.hero{padding:18px 0 12px}.topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{display:flex;gap:12px;align-items:center}.logo{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--brand);color:#fff;font-family:Georgia,serif;font-size:24px;box-shadow:0 10px 28px rgba(14,92,75,.25)}.brand-name{font-family:Georgia,serif;font-size:24px;line-height:1}.brand-sub{font-size:12px;color:var(--muted);margin-top:5px}.icon-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.76);color:var(--brand);font-size:20px}
+.hero-card{overflow:hidden;display:grid;grid-template-columns:1.35fr .65fr;min-height:310px;border-radius:30px;background:linear-gradient(135deg,#123f35,#0b5a48 60%,#0d6a54);color:#fff;box-shadow:var(--shadow);position:relative}.hero-copy{padding:34px 20px 30px 28px;z-index:2}.eyebrow{display:inline-block;letter-spacing:.14em;font-size:11px;font-weight:800;opacity:.74}.hero h1{font-family:Georgia,serif;font-size:38px;line-height:.98;margin:12px 0 14px}.hero p{max-width:420px;color:rgba(255,255,255,.8);font-size:15px;line-height:1.5}.hero-visual{display:grid;place-items:center}.plate{width:145px;height:145px;border-radius:50%;display:grid;place-items:center;font-size:70px;background:linear-gradient(145deg,#fffaf0,#e9dfcf);box-shadow:0 18px 45px rgba(0,0,0,.22);transform:rotate(-8deg)}.primary{border:none;border-radius:16px;background:#fff;color:var(--brand);padding:14px 18px;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.12)}.hero-cta{margin-top:4px}
+.section{margin-top:24px}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}.section h2{font-family:Georgia,serif;font-size:27px;margin:5px 0 0}.text-btn{border:0;background:none;color:var(--brand);font-weight:800;padding:8px}.chips{display:flex;gap:8px;overflow:auto;padding-bottom:6px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chip{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 14px;color:#52635e;font-weight:700}.chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.product-card{border:1px solid var(--line);background:var(--card);border-radius:22px;overflow:hidden;box-shadow:0 8px 22px rgba(47,58,51,.06)}.product-img{height:130px;display:grid;place-items:center;font-size:58px;background:linear-gradient(145deg,#f2eadc,#fff)}.product-info{padding:14px}.product-title{font-family:Georgia,serif;font-size:18px;margin:0 0 6px}.product-desc{font-size:12px;color:var(--muted);line-height:1.45;min-height:35px}.product-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:12px}.price{font-weight:900}.qty{display:flex;align-items:center;gap:9px}.qty button{width:30px;height:30px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--brand);font-size:18px;font-weight:900}.qty button.plus{background:var(--brand);color:#fff;border-color:var(--brand)}
+.soft-card,.summary-card{background:rgba(255,253,248,.9);border:1px solid var(--line);border-radius:28px;padding:20px;box-shadow:0 10px 30px rgba(39,51,46,.05)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field span{font-size:12px;color:var(--muted);font-weight:800}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:14px;background:#fff;padding:13px 14px;color:var(--ink);outline:none}.cart-list{display:flex;flex-direction:column;gap:10px;margin:14px 0}.cart-row{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px dashed var(--line)}.cart-row small{color:var(--muted)}.empty{color:var(--muted);padding:12px 0}.totals{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px}.totals>div{display:flex;justify-content:space-between}.totals .grand{font-size:20px;padding-top:8px}.checkout-btn{width:100%;margin-top:18px;background:var(--brand);color:#fff}
+.bottom-cart{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(724px,calc(100% - 28px));display:flex;align-items:center;justify-content:space-between;background:#102f29;color:#fff;border-radius:20px;padding:13px 14px 13px 18px;box-shadow:0 16px 45px rgba(0,0,0,.25);z-index:30}.bottom-cart small{display:block;color:rgba(255,255,255,.66);font-size:11px}.bottom-cart strong{font-size:18px}.bottom-cart button{border:0;border-radius:14px;background:#fff;color:var(--brand);padding:11px 16px;font-weight:900}.toast{position:fixed;top:18px;left:50%;transform:translate(-50%,-20px);background:#173e35;color:#fff;padding:12px 16px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:100;box-shadow:var(--shadow)}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:560px){.app-shell{padding-left:12px;padding-right:12px}.hero-card{grid-template-columns:1fr;min-height:0}.hero-visual{display:none}.hero h1{font-size:34px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+@media(max-width:390px){.product-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="topline">
+        <div class="brand">
+          <div class="logo">S</div>
+          <div>
+            <div class="brand-name">Saborê</div>
+            <div class="brand-sub">Floripa • comida com carinho</div>
+          </div>
+        </div>
+        <button class="icon-btn" aria-label="Избранное">♡</button>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-copy">
+          <span class="eyebrow">HOJE</span>
+          <h1>Вкусный ужин<br>без лишних хлопот</h1>
+          <p>Домашние блюда, гарниры и детское меню с доставкой по Florianópolis.</p>
+          <button class="primary hero-cta" data-scroll="#menu">Выбрать блюда</button>
+        </div>
+        <div class="hero-visual"><div class="plate">🍽️</div></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section" id="menu">
+        <div class="section-head">
+          <div><span class="eyebrow">МЕНЮ</span><h2>Что будем заказывать?</h2></div>
+          <button class="text-btn" id="repeatBtn">Повторить прошлый</button>
+        </div>
+        <div class="chips" id="categoryChips"></div>
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+
+      <section class="section soft-card">
+        <div class="section-head">
+          <div><span class="eyebrow">ДОСТАВКА</span><h2>Куда привезти?</h2></div>
+        </div>
+        <div class="form-grid">
+          <label class="field"><span>Имя</span><input id="nameInput" placeholder="Например, Maria" /></label>
+          <label class="field"><span>Телефон</span><input id="phoneInput" placeholder="+55 ..." inputmode="tel" /></label>
+          <label class="field full"><span>Адрес</span><input id="addressInput" placeholder="Rua, número, bairro" /></label>
+          <label class="field"><span>Время</span>
+            <select id="timeInput">
+              <option>Как можно скорее</option><option>18:00–19:00</option><option>19:00–20:00</option><option>20:00–21:00</option>
+            </select>
+          </label>
+          <label class="field"><span>Оплата</span>
+            <select id="paymentInput"><option>PIX</option><option>Карта при доставке</option><option>Наличные</option></select>
+          </label>
+          <label class="field full"><span>Комментарий</span><textarea id="commentInput" rows="3" placeholder="Без лука, позвонить у ворот и т.д."></textarea></label>
+        </div>
+      </section>
+
+      <section class="section summary-card">
+        <div><span class="eyebrow">ВАШ ЗАКАЗ</span><h2>Корзина</h2></div>
+        <div id="cartList" class="cart-list"><div class="empty">Пока ничего не выбрано</div></div>
+        <div class="totals">
+          <div><span>Блюда</span><strong id="subtotal">R$ 0,00</strong></div>
+          <div><span>Доставка</span><strong id="delivery">R$ 10,00</strong></div>
+          <div class="grand"><span>Итого</span><strong id="total">R$ 0,00</strong></div>
+        </div>
+        <button class="primary checkout-btn" id="checkoutBtn">Подтвердить заказ</button>
+      </section>
+    </main>
+
+    <div class="bottom-cart">
+      <div><small id="bottomCount">0 товаров</small><strong id="bottomTotal">R$ 0,00</strong></div>
+      <button id="openCartBtn">Корзина →</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); try{tg.setHeaderColor('#f6f3ec')}catch(e){} try{tg.setBackgroundColor('#f6f3ec')}catch(e){} }
+
+const products = [
+{id:'tilapia',cat:'Основное',name:'Tilápia com ervas',desc:'Филе тилапии, свежие травы, лимон',price:42,emoji:'🐟'},
+{id:'carbonara',cat:'Основное',name:'Pasta Carbonara',desc:'Сливочная паста с беконом и пармезаном',price:38,emoji:'🍝'},
+{id:'frango',cat:'Основное',name:'Frango grelhado',desc:'Куриное филе, специи, сезонные овощи',price:36,emoji:'🍗'},
+{id:'arroz',cat:'Гарниры',name:'Arroz com legumes',desc:'Рис с овощами и зеленью',price:12,emoji:'🍚'},
+{id:'batata',cat:'Гарниры',name:'Batata assada',desc:'Запечённый картофель с травами',price:14,emoji:'🥔'},
+{id:'kids',cat:'Детское',name:'Menu Kids',desc:'Мини-котлетки, рис и овощи',price:28,emoji:'🧸'},
+{id:'suco',cat:'Напитки',name:'Suco natural',desc:'Апельсин или маракуйя',price:10,emoji:'🍊'},
+{id:'agua',cat:'Напитки',name:'Água',desc:'Без газа, 500 мл',price:6,emoji:'💧'},
+{id:'brownie',cat:'Десерты',name:'Brownie da casa',desc:'Шоколадный брауни домашнего приготовления',price:16,emoji:'🍫'}
+];
+const categories=['Все',...new Set(products.map(p=>p.cat))], cart={}; let activeCategory='Все'; const deliveryFee=10;
+const money=n=>`R$ ${n.toFixed(2).replace('.',',')}`;
+
+function renderCategories(){
+ const el=document.getElementById('categoryChips');
+ el.innerHTML=categories.map(c=>`<button class="chip ${c===activeCategory?'active':''}" data-cat="${c}">${c}</button>`).join('');
+ el.querySelectorAll('.chip').forEach(btn=>btn.onclick=()=>{activeCategory=btn.dataset.cat;renderCategories();renderProducts()});
+}
+function renderProducts(){
+ const items=activeCategory==='Все'?products:products.filter(p=>p.cat===activeCategory);
+ const el=document.getElementById('productGrid');
+ el.innerHTML=items.map(p=>{const q=cart[p.id]||0; return `<article class="product-card"><div class="product-img">${p.emoji}</div><div class="product-info"><h3 class="product-title">${p.name}</h3><div class="product-desc">${p.desc}</div><div class="product-bottom"><span class="price">${money(p.price)}</span><div class="qty"><button data-id="${p.id}" data-delta="-1">−</button><strong>${q}</strong><button class="plus" data-id="${p.id}" data-delta="1">+</button></div></div></div></article>`}).join('');
+ el.querySelectorAll('.qty button').forEach(btn=>btn.onclick=()=>{const id=btn.dataset.id,delta=Number(btn.dataset.delta);cart[id]=Math.max(0,(cart[id]||0)+delta);if(!cart[id])delete cart[id];try{tg?.HapticFeedback?.impactOccurred('light')}catch(e){}renderProducts();renderCart()});
+}
+function renderCart(){
+ const entries=Object.entries(cart), cartList=document.getElementById('cartList');
+ const subtotal=entries.reduce((s,[id,q])=>s+products.find(p=>p.id===id).price*q,0);
+ const count=entries.reduce((s,[,q])=>s+q,0);
+ cartList.innerHTML=entries.length?entries.map(([id,q])=>{const p=products.find(x=>x.id===id);return `<div class="cart-row"><div><strong>${p.name}</strong><br><small>${q} × ${money(p.price)}</small></div><strong>${money(p.price*q)}</strong></div>`}).join(''):'<div class="empty">Пока ничего не выбрано</div>';
+ document.getElementById('subtotal').textContent=money(subtotal);
+ document.getElementById('delivery').textContent=money(entries.length?deliveryFee:0);
+ document.getElementById('total').textContent=money(subtotal+(entries.length?deliveryFee:0));
+ document.getElementById('bottomCount').textContent=`${count} товаров`;
+ document.getElementById('bottomTotal').textContent=money(subtotal);
+}
+function showToast(text){const t=document.getElementById('toast');t.textContent=text;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function getOrder(){
+ const items=Object.entries(cart).map(([id,qty])=>{const p=products.find(x=>x.id===id);return{id,name:p.name,qty,price:p.price,total:p.price*qty}});
+ const subtotal=items.reduce((s,x)=>s+x.total,0);
+ return {customer:{name:document.getElementById('nameInput').value.trim(),phone:document.getElementById('phoneInput').value.trim(),telegram_user:tg?.initDataUnsafe?.user||null},delivery:{address:document.getElementById('addressInput').value.trim(),time:document.getElementById('timeInput').value,payment:document.getElementById('paymentInput').value,comment:document.getElementById('commentInput').value.trim()},items,subtotal,delivery_fee:items.length?deliveryFee:0,total:subtotal+(items.length?deliveryFee:0)};
+}
+document.getElementById('checkoutBtn').onclick=()=>{const order=getOrder();if(!order.items.length){showToast('Добавьте хотя бы одно блюдо');return}if(!order.customer.name||!order.delivery.address){showToast('Укажите имя и адрес доставки');return}const payload=JSON.stringify({type:'new_order',order});if(tg?.sendData){try{tg.sendData(payload)}catch(e){}}try{tg?.HapticFeedback?.notificationOccurred('success')}catch(e){}showToast(`Заказ на ${money(order.total)} готов к отправке`)};
+document.getElementById('openCartBtn').onclick=()=>document.querySelector('.summary-card').scrollIntoView({behavior:'smooth'});
+document.getElementById('repeatBtn').onclick=()=>{Object.assign(cart,{tilapia:2,arroz:2,suco:2});renderProducts();renderCart();showToast('Прошлый заказ добавлен')};
+document.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>document.querySelector(b.dataset.scroll).scrollIntoView({behavior:'smooth'}));
+const user=tg?.initDataUnsafe?.user;if(user?.first_name)document.getElementById('nameInput').value=user.first_name;
+renderCategories();renderProducts();renderCart();
+
+</script>
+</body>
+</html>
